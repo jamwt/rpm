@@ -1,0 +1,12 @@
+[package]
+name = "rpm"
+version = "0.1.0"
+authors = ["Jamie Turner <jamwt@pobox.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+bevy = "0.2"
+smallvec = "1.4"
+ndarray = "0.13"
