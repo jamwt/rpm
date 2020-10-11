@@ -1,5 +1,5 @@
-RPM
-===
+RPM -- Rust PacMan
+==================
 
 Just a for-fun pacman clone using the bevy engine, for learning purposes.
 
