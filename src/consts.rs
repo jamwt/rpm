@@ -9,6 +9,9 @@ pub(crate) const BOUNDING_BOX: Rect<f32> = Rect {
     right: 112.0,
 };
 
+pub(crate) const TILES_WIDE: usize = 28; // Move to 80 soon for tunnel
+pub(crate) const TILES_HIGH: usize = 36;
+
 #[derive(Copy, Clone, PartialEq, Eq)]
 pub(crate) enum Direction {
     Up,

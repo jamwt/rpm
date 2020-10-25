@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 use crate::map::{Map, map_tile_to_translation};
-use crate::consts::{BOUNDING_BOX, SCALE};
+use crate::consts::{BOUNDING_BOX, SCALE, TILES_WIDE, TILES_HIGH};
 
 pub(crate) struct DebugPlugin;
 
@@ -20,8 +20,8 @@ fn setup_grid(
 ){
     let grid_material = materials.add(Color::rgba(0.4, 0.0, 0.0, 0.4).into());
     // Vertical lines
-    for x in 0..28 {
-        let start = map_tile_to_translation(x, 0, Some(0), Some(0));
+    for x in 0..TILES_WIDE {
+        let start = map_tile_to_translation(x as u32, 0, Some(0), Some(0));
         commands
             .spawn(SpriteComponents {
                 material: grid_material,
@@ -33,8 +33,8 @@ fn setup_grid(
             });
     }
     // Vertical lines
-    for y in 0..36 {
-        let start = map_tile_to_translation(0, y, Some(0), Some(0));
+    for y in 0..TILES_HIGH {
+        let start = map_tile_to_translation(0, y as u32, Some(0), Some(0));
         commands
             .spawn(SpriteComponents {
                 material: grid_material,
@@ -48,9 +48,9 @@ fn setup_grid(
     }
 
     let valid_path_material = materials.add(Color::rgba(0.6, 0.6, 0.6, 0.3).into());
-    for x in 0..28 {
-        for y in 0..36 {
-            let (tile, mut translation) = map.get_tile(x, y);
+    for x in 0..TILES_WIDE {
+        for y in 0..TILES_HIGH {
+            let (tile, mut translation) = map.get_tile(x as u32, y as u32);
             translation.set_z(2.0);
             if tile.is_valid_path() {
                 commands

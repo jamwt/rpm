@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use smallvec::SmallVec;
 use ndarray::{Array, Array2};
 
-use crate::consts::{BOUNDING_BOX, SCALE, TILE_SIZE, Direction};
+use crate::consts::{BOUNDING_BOX, SCALE, TILE_SIZE, Direction, TILES_WIDE, TILES_HIGH};
 
 const I: bool = false;
 const X: bool = true;
@@ -152,14 +152,14 @@ impl Map {
                         direction: Direction) -> Option<((u32, u32), Tile, Vec3)> {
         match direction {
             Direction::Up => {
-                if y == 35 {
+                if y == (TILES_HIGH - 1) as u32 {
                     return None;
                 } else {
                     y += 1;
                 }
             },
             Direction::Right => {
-                if x == 27 {
+                if x == (TILES_WIDE - 1) as u32 {
                     return None;
                 } else {
                     x += 1;
@@ -187,11 +187,11 @@ impl Map {
 
 impl Default for Map {
     fn default() -> Self {
-        assert_eq!(MAP_PATH_VALIDITY.len(), 28 * 36);
+        assert_eq!(MAP_PATH_VALIDITY.len(), TILES_WIDE * TILES_HIGH);
         Self {
-            tiles: Array::from_shape_fn((28, 36),
+            tiles: Array::from_shape_fn((TILES_WIDE, TILES_HIGH),
                                         |(i, j)|  {
-                                            let idx = ((35 - j) * 28)+i;
+                                            let idx = (((TILES_HIGH - 1) - j) * TILES_WIDE)+i;
                                             if MAP_PATH_VALIDITY[idx] {
                                                 Tile::Path(PathTile::default())
                                             } else {
