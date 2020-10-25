@@ -15,21 +15,21 @@ Rough Roadmap
  - [x] Sprite animation
  - [x] Follow Map
  - [x] Pre-Turn Logic
+ - [X] Tunnel support
  - [ ] Dots -- consumption + score
  - [ ] Dots -- speed alterations (frame skip)
- - [ ] Tunnel support
- - [ ] Speed alterations due to tunnel
 
 **Ghosts**
- - [ ] Ghosts -- Blinky frightened
- - [ ] Ghosts -- Target-following pathfinding logic
- - [ ] Ghosts -- Target-following debug mode
- - [ ] Ghosts -- Blinky chase (algorithm)
- - [ ] Ghosts -- Blinky scatter (parameter)
- - [ ] Ghosts -- Generalize
- - [ ] Ghosts -- (Other ghosts)
- - [ ] Ghosts -- Spawn
- - [ ] Ghosts -- Eaten + return to house
+ - [ ] Blinky frightened
+ - [ ] Target-following pathfinding logic
+ - [ ] Target-following debug mode
+ - [ ] Blinky chase (algorithm)
+ - [ ] Blinky scatter (parameter)
+ - [ ] Generalize
+ - [ ] Other ghosts
+ - [ ] Spawn
+ - [ ] Eaten + return to house
+ - [ ] Speed alterations due to tunnel
 
 **Bonuses**
  - [ ] Cherries etc
