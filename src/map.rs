@@ -53,6 +53,20 @@ impl TileInformation {
         }
     }
 
+    pub fn edge(&self) -> Option<Direction> {
+        if self.x() == (TILES_WIDE - 1) as u32 {
+            Some(Direction::Right)
+        } else if self.x() == 0 {
+            Some(Direction::Left)
+        } else if self.y() == (TILES_HIGH - 1) as u32 {
+            Some(Direction::Up)
+        } else if self.y() == 0 {
+            Some(Direction::Down)
+        } else {
+            None
+        }
+    }
+
     pub fn align(&self, facing: Direction) -> Option<Direction> {
         let center = TILE_SIZE as u32 / 2;
         match facing {
@@ -91,42 +105,42 @@ impl Default for TileInformation {
 }
 
 static MAP_PATH_VALIDITY: &[bool] = &[
-    I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I,
-    I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I,
-    I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I,
-    I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I,
-    I, X, X, X, X, X, X, X, X, X, X, X, X, I, I, X, X, X, X, X, X, X, X, X, X, X, X, I,
-    I, X, I, I, I, I, X, I, I, I, I, I, X, I, I, X, I, I, I, I, I, X, I, I, I, I, X, I,
-    I, X, I, I, I, I, X, I, I, I, I, I, X, I, I, X, I, I, I, I, I, X, I, I, I, I, X, I,
-    I, X, I, I, I, I, X, I, I, I, I, I, X, I, I, X, I, I, I, I, I, X, I, I, I, I, X, I,
-    I, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, I,
-    I, X, I, I, I, I, X, I, I, X, I, I, I, I, I, I, I, I, X, I, I, X, I, I, I, I, X, I,
-    I, X, I, I, I, I, X, I, I, X, I, I, I, I, I, I, I, I, X, I, I, X, I, I, I, I, X, I,
-    I, X, X, X, X, X, X, I, I, X, X, X, X, I, I, X, X, X, X, I, I, X, X, X, X, X, X, I,
-    I, I, I, I, I, I, X, I, I, I, I, I, X, I, I, X, I, I, I, I, I, X, I, I, I, I, I, I,
-    I, I, I, I, I, I, X, I, I, I, I, I, X, I, I, X, I, I, I, I, I, X, I, I, I, I, I, I,
-    I, I, I, I, I, I, X, I, I, X, X, X, X, X, X, X, X, X, X, I, I, X, I, I, I, I, I, I,
-    I, I, I, I, I, I, X, I, I, X, I, I, I, I, I, I, I, I, X, I, I, X, I, I, I, I, I, I,
-    I, I, I, I, I, I, X, I, I, X, I, I, I, I, I, I, I, I, X, I, I, X, I, I, I, I, I, I,
-    X, X, X, X, X, X, X, X, X, X, I, I, I, I, I, I, I, I, X, X, X, X, X, X, X, X, X, X,
-    I, I, I, I, I, I, X, I, I, X, I, I, I, I, I, I, I, I, X, I, I, X, I, I, I, I, I, I,
-    I, I, I, I, I, I, X, I, I, X, I, I, I, I, I, I, I, I, X, I, I, X, I, I, I, I, I, I,
-    I, I, I, I, I, I, X, I, I, X, X, X, X, X, X, X, X, X, X, I, I, X, I, I, I, I, I, I,
-    I, I, I, I, I, I, X, I, I, X, I, I, I, I, I, I, I, I, X, I, I, X, I, I, I, I, I, I,
-    I, I, I, I, I, I, X, I, I, X, I, I, I, I, I, I, I, I, X, I, I, X, I, I, I, I, I, I,
-    I, X, X, X, X, X, X, X, X, X, X, X, X, I, I, X, X, X, X, X, X, X, X, X, X, X, X, I,
-    I, X, I, I, I, I, X, I, I, I, I, I, X, I, I, X, I, I, I, I, I, X, I, I, I, I, X, I,
-    I, X, I, I, I, I, X, I, I, I, I, I, X, I, I, X, I, I, I, I, I, X, I, I, I, I, X, I,
-    I, X, X, X, I, I, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, I, I, X, X, X, I,
-    I, I, I, X, I, I, X, I, I, X, I, I, I, I, I, I, I, I, X, I, I, X, I, I, X, I, I, I,
-    I, I, I, X, I, I, X, I, I, X, I, I, I, I, I, I, I, I, X, I, I, X, I, I, X, I, I, I,
-    I, X, X, X, X, X, X, I, I, X, X, X, X, I, I, X, X, X, X, I, I, X, X, X, X, X, X, I,
-    I, X, I, I, I, I, I, I, I, I, I, I, X, I, I, X, I, I, I, I, I, I, I, I, I, I, X, I,
-    I, X, I, I, I, I, I, I, I, I, I, I, X, I, I, X, I, I, I, I, I, I, I, I, I, I, X, I,
-    I, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, I,
-    I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I,
-    I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I,
-    I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I,
+    I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I,
+    I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I,
+    I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I,
+    I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I,
+    I, I, I, X, X, X, X, X, X, X, X, X, X, X, X, I, I, X, X, X, X, X, X, X, X, X, X, X, X, I, I, I,
+    I, I, I, X, I, I, I, I, X, I, I, I, I, I, X, I, I, X, I, I, I, I, I, X, I, I, I, I, X, I, I, I,
+    I, I, I, X, I, I, I, I, X, I, I, I, I, I, X, I, I, X, I, I, I, I, I, X, I, I, I, I, X, I, I, I,
+    I, I, I, X, I, I, I, I, X, I, I, I, I, I, X, I, I, X, I, I, I, I, I, X, I, I, I, I, X, I, I, I,
+    I, I, I, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, I, I, I,
+    I, I, I, X, I, I, I, I, X, I, I, X, I, I, I, I, I, I, I, I, X, I, I, X, I, I, I, I, X, I, I, I,
+    I, I, I, X, I, I, I, I, X, I, I, X, I, I, I, I, I, I, I, I, X, I, I, X, I, I, I, I, X, I, I, I,
+    I, I, I, X, X, X, X, X, X, I, I, X, X, X, X, I, I, X, X, X, X, I, I, X, X, X, X, X, X, I, I, I,
+    I, I, I, I, I, I, I, I, X, I, I, I, I, I, X, I, I, X, I, I, I, I, I, X, I, I, I, I, I, I, I, I,
+    I, I, I, I, I, I, I, I, X, I, I, I, I, I, X, I, I, X, I, I, I, I, I, X, I, I, I, I, I, I, I, I,
+    I, I, I, I, I, I, I, I, X, I, I, X, X, X, X, X, X, X, X, X, X, I, I, X, I, I, I, I, I, I, I, I,
+    I, I, I, I, I, I, I, I, X, I, I, X, I, I, I, I, I, I, I, I, X, I, I, X, I, I, I, I, I, I, I, I,
+    I, I, I, I, I, I, I, I, X, I, I, X, I, I, I, I, I, I, I, I, X, I, I, X, I, I, I, I, I, I, I, I,
+    X, X, X, X, X, X, X, X, X, X, X, X, I, I, I, I, I, I, I, I, X, X, X, X, X, X, X, X, X, X, X, X,
+    I, I, I, I, I, I, I, I, X, I, I, X, I, I, I, I, I, I, I, I, X, I, I, X, I, I, I, I, I, I, I, I,
+    I, I, I, I, I, I, I, I, X, I, I, X, I, I, I, I, I, I, I, I, X, I, I, X, I, I, I, I, I, I, I, I,
+    I, I, I, I, I, I, I, I, X, I, I, X, X, X, X, X, X, X, X, X, X, I, I, X, I, I, I, I, I, I, I, I,
+    I, I, I, I, I, I, I, I, X, I, I, X, I, I, I, I, I, I, I, I, X, I, I, X, I, I, I, I, I, I, I, I,
+    I, I, I, I, I, I, I, I, X, I, I, X, I, I, I, I, I, I, I, I, X, I, I, X, I, I, I, I, I, I, I, I,
+    I, I, I, X, X, X, X, X, X, X, X, X, X, X, X, I, I, X, X, X, X, X, X, X, X, X, X, X, X, I, I, I,
+    I, I, I, X, I, I, I, I, X, I, I, I, I, I, X, I, I, X, I, I, I, I, I, X, I, I, I, I, X, I, I, I,
+    I, I, I, X, I, I, I, I, X, I, I, I, I, I, X, I, I, X, I, I, I, I, I, X, I, I, I, I, X, I, I, I,
+    I, I, I, X, X, X, I, I, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, I, I, X, X, X, I, I, I,
+    I, I, I, I, I, X, I, I, X, I, I, X, I, I, I, I, I, I, I, I, X, I, I, X, I, I, X, I, I, I, I, I,
+    I, I, I, I, I, X, I, I, X, I, I, X, I, I, I, I, I, I, I, I, X, I, I, X, I, I, X, I, I, I, I, I,
+    I, I, I, X, X, X, X, X, X, I, I, X, X, X, X, I, I, X, X, X, X, I, I, X, X, X, X, X, X, I, I, I,
+    I, I, I, X, I, I, I, I, I, I, I, I, I, I, X, I, I, X, I, I, I, I, I, I, I, I, I, I, X, I, I, I,
+    I, I, I, X, I, I, I, I, I, I, I, I, I, I, X, I, I, X, I, I, I, I, I, I, I, I, I, I, X, I, I, I,
+    I, I, I, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, I, I, I,
+    I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I,
+    I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I,
+    I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I,
 ];
 
 pub(crate) struct Map {
@@ -243,6 +257,7 @@ impl Plugin for MapPlugin {
 fn setup_map(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
+    map: Res<Map>,
     mut materials: ResMut<Assets<ColorMaterial>>,
     mut textures: ResMut<Assets<Texture>>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
@@ -279,6 +294,26 @@ fn setup_map(
         .spawn(map_sprite_sheet_components) // Add the map.
     ;
 
+    // Now, let's hide the tunnel under black squares.
+    let hide_tunnel = materials.add(Color::rgba(0.0, 0.0, 0.0, 1.0).into());
+    let hide_tile_loc = map_tile_to_translation(1, 18, Some(0), None);
+    commands
+        .spawn(SpriteComponents {
+            material: hide_tunnel,
+            transform: Transform::from_translation(
+                Vec3::new(hide_tile_loc.x(), hide_tile_loc.y(), 2.0)),
+            sprite: Sprite::new(Vec2::new(TILE_SIZE * SCALE * 2.0, TILE_SIZE * SCALE * 3.0)),
+            ..Default::default()
+        });
+    let hide_tile_loc = map_tile_to_translation((TILES_WIDE - 1) as u32, 18, Some(0), None);
+    commands
+        .spawn(SpriteComponents {
+            material: hide_tunnel,
+            transform: Transform::from_translation(
+                Vec3::new(hide_tile_loc.x(), hide_tile_loc.y(), 2.0)),
+            sprite: Sprite::new(Vec2::new(TILE_SIZE * SCALE * 2.0, TILE_SIZE * SCALE * 3.0)),
+            ..Default::default()
+        });
 }
 
 pub(crate) fn map_tile_to_translation(

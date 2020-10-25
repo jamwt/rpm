@@ -5,7 +5,7 @@ use crate::map::{
     translation_to_map_tile,
     TileInformation,
 };
-use crate::consts::{Direction};
+use crate::consts::{Direction, TILES_WIDE, TILE_SIZE, SCALE};
 
 pub(crate) struct Sprite {
     facing: Direction,
@@ -103,6 +103,9 @@ fn move_sprites(
             adjust_for_cornering(new_tile_info, sprite.facing, &mut new_translation,
             x_movement, y_movement);
 
+            // Jump tiles if we're teleporting.
+            let new_tile_info = tunnel_teleport(new_tile_info, sprite.facing, &mut new_translation);
+
             // Okay, update the position valid to move into this tile..
             *translation = new_translation;
             sprite.update_tile_information(new_tile_info);
@@ -144,6 +147,25 @@ fn adjust_for_cornering(
     }
 }
 
+fn tunnel_teleport(
+    tile_info: TileInformation,
+    facing: Direction,
+    translation: &mut Vec4,
+) -> TileInformation {
+    let teleport_distance = ((TILES_WIDE - 2) as f32 * TILE_SIZE) * SCALE;
+    match (facing, tile_info.edge()) {
+        (Direction::Right, Some(Direction::Right)) => {
+            *translation.x_mut() -= teleport_distance;
+            translation_to_map_tile(&translation)
+        },
+        (Direction::Left, Some(Direction::Left)) => {
+            *translation.x_mut() += teleport_distance;
+            translation_to_map_tile(&translation)
+        },
+        _ => tile_info,
+    }
+}
+
 // TODO  -- cycle through sprite indexes on timer basis
 fn animate_sprites(
     mut query: Query<(&mut Timer, &mut Sprite, &mut TextureAtlasSprite)>
@@ -157,3 +179,4 @@ fn animate_sprites(
         }
     }
 }
+
